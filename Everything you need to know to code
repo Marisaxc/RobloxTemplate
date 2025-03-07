@@ -1,0 +1,150 @@
+-- Variables ↓
+local myNumber = 10
+local myText = "Hello, Roblox!"
+local isCool = true -- Boolean (true/false)
+
+-- Calls the function ↓
+function sayHello()
+    print("Hello, world!")
+end
+
+sayHello()
+
+-- Counting ↓
+local count = 0
+
+while count < 5 do
+    print("Count is:", count)
+    count = count + 1
+end
+
+-- Status
+local playerStats = {
+    name = "Kevin",
+    health = 100
+}
+
+print(playerStats.name) -- Output: Kevin
+
+-- Testing:
+
+print("Welcome to Roblox Scripting!")
+
+-- # Interacting with objects (Great for first scripting!)
+local part = script.Parent
+part.BrickColor = BrickColor.new("Bright red")
+part.Size = Vector3.new(5, 5, 5)
+
+-- Touching the part (Useful for some games with "Find the.." theme!)
+local part = script.Parent
+
+local function onTouched(hit)
+    print(hit.Name .. " touched the part!")
+end
+
+part.Touched:Connect(onTouched)
+
+-- # Walkspeed
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = 50
+        end
+    end)
+end)
+
+-- GUI's ( Best, in my opinion )
+script.Parent.Text = "Hello, " .. game.Players.LocalPlayer.Name .. "!"
+
+-- RemoteEvents
+
+-- Insert a RemoteEvent into ReplicatedStorage.
+-- Insert a Script inside ServerScriptService.
+-- Insert a LocalScript inside StarterPlayerScripts.
+
+local event = game.ReplicatedStorage:FindFirstChild("RemoteEvent")
+
+event.OnServerEvent:Connect(function(player)
+    local explosion = Instance.new("Explosion")
+    explosion.Position = player.Character.HumanoidRootPart.Position
+    explosion.Parent = game.Workspace
+end)
+
+-- # LocalScript (Triggers the Event)
+local event = game.ReplicatedStorage:FindFirstChild("RemoteEvent")
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, processed)
+    if input.KeyCode == Enum.KeyCode.E and not processed then
+        event:FireServer()
+    end
+end)
+
+-- Now, pressing E will create an explosion.
+
+          -- # Creating a GUI [ Admin panel.. ]
+-- Adding a GUI to the Game
+-- Open Roblox Studio.
+-- In StarterGui, insert a ScreenGui.
+-- Inside the ScreenGui, insert a Frame (this will be the panel).
+-- Inside the Frame, insert:
+-- A TextLabel (for the title).
+-- A TextButton (for an action, like kicking a player).
+-- A LocalScript (for interactivity).
+-- Now, let's add a script to show/hide the panel when the player presses a key.
+
+-- LocalScript inside the ScreenGui
+local gui = script.Parent
+local userInput = game:GetService("UserInputService")
+
+-- Hide GUI at start
+
+gui.Enabled = false
+
+userInput.InputBegan:Connect(function(input, processed)
+    if processed then return end
+    if input.KeyCode == Enum.KeyCode.F then -- Press 'F' to open/close
+        gui.Enabled = not gui.Enabled
+    end
+end)
+
+-- Creating an Admin Panel
+-- Now, let’s make a basic Admin Panel that allows an admin to kick players.
+
+-- Setting Up the Panel
+-- Follow the same steps as the GUI, but inside the Frame, add:
+
+-- A TextBox (for entering a player’s name).
+-- A TextButton (for kicking the player).
+-- A RemoteEvent inside ReplicatedStorage (name it "KickPlayerEvent").
+-- A LocalScript inside the TextButton.
+-- 2.2 Connecting the Button to Kick Players
+-- LocalScript (Inside the Button)
+
+local button = script.Parent
+local textBox = script.Parent.Parent:FindFirstChild("TextBox")
+local event = game.ReplicatedStorage:FindFirstChild("KickPlayerEvent")
+
+button.MouseButton1Click:Connect(function()
+    local playerName = textBox.Text
+    if playerName ~= "" then
+        event:FireServer(playerName)
+    end
+end)
+-- Kicking the Player (Server-Side)
+-- Create a Script inside ServerScriptService to handle the event.
+
+local event = game.ReplicatedStorage:FindFirstChild("KickPlayerEvent")
+
+event.OnServerEvent:Connect(function(player, targetName)
+    if player.Name == "Kevin" then -- Replace with your name
+        local targetPlayer = game.Players:FindFirstChild(targetName)
+        if targetPlayer then
+            targetPlayer:Kick("You have been kicked by an admin!")
+        else
+            player:Kick("Invalid player name!")
+        end
+    end
+end)
+
+Everything else you can learn watching videos, reading books and etc.. 🤔
